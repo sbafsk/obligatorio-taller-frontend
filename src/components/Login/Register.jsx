@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import {
   Typography,
   Container,
@@ -9,12 +9,9 @@ import {
 } from '@mui/material'
 
 const Login = () => {
-  const emailRef = useRef()
-  const passwordRef = useRef()
-
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log(emailRef.current.value, passwordRef.current.value)
+    // leer datos
   }
 
   return (
@@ -32,7 +29,6 @@ const Login = () => {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
-            inputRef={emailRef}
             margin="normal"
             required
             fullWidth
@@ -43,7 +39,6 @@ const Login = () => {
             autoFocus
           />
           <TextField
-            inputRef={passwordRef}
             margin="normal"
             required
             fullWidth
