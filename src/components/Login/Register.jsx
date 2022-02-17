@@ -8,7 +8,7 @@ import {
   Box
 } from '@mui/material'
 
-const Login = () => {
+const Register = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     // leer datos
@@ -50,15 +50,13 @@ const Login = () => {
           />
 
           <Button type="submit" fullWidth variant="contained" sx={{ my: 3 }}>
-            Sign In
+            Registrar
           </Button>
-          <Link href="#" variant="body2">
-            Registro
-          </Link>
+          <Link href="/login">Volver al Login</Link>
         </Box>
       </Box>
     </Container>
   )
 }
 
-export default Login
+export default Register

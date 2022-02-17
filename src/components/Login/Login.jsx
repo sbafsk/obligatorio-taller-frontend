@@ -1,4 +1,5 @@
 import React, { useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import {
   Typography,
   Container,
@@ -8,13 +9,31 @@ import {
   Box
 } from '@mui/material'
 
+import { onUserLogged } from '../../store/actions'
+import { onLogin } from '../../services/api'
+import { paths } from '../../routes'
+
 const Login = () => {
   const emailRef = useRef()
   const passwordRef = useRef()
+  const dispatch = useDispatch()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    console.log(emailRef.current.value, passwordRef.current.value)
+    const username = emailRef.current.value
+    const password = passwordRef.current.value
+
+    if (username === '' || password === '') {
+      alert('Por favor ingresa los campos obligatorios')
+    } else {
+      try {
+        const data = await onLogin({ user: username, pass: password })
+        sessionStorage.setItem('myOrderAppUser', JSON.stringify(data))
+        dispatch(onUserLogged(data))
+      } catch (error) {
+        alert(error.message)
+      }
+    }
   }
 
   return (
@@ -28,7 +47,7 @@ const Login = () => {
         }}
       >
         <Typography component="h1" variant="h5">
-          Sign in
+          Inicia Sesion
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -53,13 +72,10 @@ const Login = () => {
             id="password"
             autoComplete="current-password"
           />
-
           <Button type="submit" fullWidth variant="contained" sx={{ my: 3 }}>
-            Sign In
+            Entrar
           </Button>
-          <Link href="#" variant="body2">
-            Registro
-          </Link>
+          No tienes cuenta ? <Link href={paths.register}>Registro</Link>
         </Box>
       </Box>
     </Container>
