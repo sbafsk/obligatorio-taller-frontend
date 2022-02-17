@@ -1,10 +1,15 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Redirect, Route } from 'react-router-dom'
 
-import { useAuth } from '../../contexts/auth'
+const PrivateRoute = ({ children, path }) => {
+  const userLogged = useSelector((state) => state.userLogged)
 
-export default function PrivateRoute({ children, path }) {
-  const { user } = useAuth()
-
-  return <Route path={path}>{user ? children : <Redirect to="/login" />}</Route>
+  return (
+    <Route path={path}>
+      {userLogged ? children : <Redirect to="/login" />}
+    </Route>
+  )
 }
+
+export default PrivateRoute
