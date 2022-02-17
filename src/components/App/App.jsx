@@ -1,18 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
 import { CssBaseline } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 
-import { Login } from '../Login'
-import Dashboard from '../Dashboard'
+import Routes from '../../routes'
+import store from '../../store'
 
 const theme = createTheme()
 
 const App = () => {
-  const [userLogged, setUserLogged] = useState(false)
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {userLogged ? <Dashboard userLogged={userLogged} /> : <Login />}
+      <Provider store={store}>
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      </Provider>
     </ThemeProvider>
   )
 }

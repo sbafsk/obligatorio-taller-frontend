@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Typography,
   Table,
@@ -7,14 +7,14 @@ import {
   TableHead,
   TableRow
 } from '@mui/material'
-import { TodoListItem } from './TodoListItem/TodoListItem'
+import OrderListItem from './OrderListItem'
 
-const tableColums = ['Title', 'Completed', 'Delete']
+const tableColums = ['Id', 'Title', 'Completed', 'Delete']
 
-const TodoList = ({ todos }) => {
+const OrderList = ({ orders }) => {
   return (
     <>
-      {todos?.length > 0 ? (
+      {orders?.length > 0 ? (
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -26,18 +26,18 @@ const TodoList = ({ todos }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {todos.map((todo, index) => (
-              <TodoListItem {...todo} key={index} />
+            {orders.map((order, index) => (
+              <OrderListItem {...order} key={index} />
             ))}
           </TableBody>
         </Table>
       ) : (
         <Typography variant="subtitle" align="center">
-          No hay todos.
+          No hay pedidos.
         </Typography>
       )}
     </>
   )
 }
 
-export default TodoList
+export default OrderList
