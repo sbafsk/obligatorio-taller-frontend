@@ -1,5 +1,4 @@
-import React, { useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import React from 'react'
 import {
   Typography,
   Container,
@@ -9,31 +8,10 @@ import {
   Box
 } from '@mui/material'
 
-import { onUserLogged } from '../../store/actions'
-import { onLogin } from '../../services/api'
-import { paths } from '../../routes'
-
-const Login = () => {
-  const emailRef = useRef()
-  const passwordRef = useRef()
-  const dispatch = useDispatch()
-
-  const handleSubmit = async (event) => {
+const Register = () => {
+  const handleSubmit = (event) => {
     event.preventDefault()
-    const username = emailRef.current.value
-    const password = passwordRef.current.value
-
-    if (username === '' || password === '') {
-      alert('Por favor ingresa los campos obligatorios')
-    } else {
-      try {
-        const data = await onLogin({ user: username, pass: password })
-        sessionStorage.setItem('myOrderAppUser', JSON.stringify(data))
-        dispatch(onUserLogged(data))
-      } catch (error) {
-        alert(error.message)
-      }
-    }
+    // leer datos
   }
 
   return (
@@ -47,11 +25,10 @@ const Login = () => {
         }}
       >
         <Typography component="h1" variant="h5">
-          Inicia Sesion
+          Sign in
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
-            inputRef={emailRef}
             margin="normal"
             required
             fullWidth
@@ -62,7 +39,6 @@ const Login = () => {
             autoFocus
           />
           <TextField
-            inputRef={passwordRef}
             margin="normal"
             required
             fullWidth
@@ -72,14 +48,15 @@ const Login = () => {
             id="password"
             autoComplete="current-password"
           />
+
           <Button type="submit" fullWidth variant="contained" sx={{ my: 3 }}>
-            Entrar
+            Registrar
           </Button>
-          No tienes cuenta ? <Link href={paths.register}>Registro</Link>
+          <Link href="/login">Volver al Login</Link>
         </Box>
       </Box>
     </Container>
   )
 }
 
-export default Login
+export default Register
