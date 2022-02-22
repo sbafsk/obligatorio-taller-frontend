@@ -5,15 +5,24 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
+  Paper
 } from '@mui/material'
 import OrderListItem from './OrderListItem'
 
-const tableColums = ['Id', 'Title', 'Completed', 'Delete']
+const tableColums = [
+  'Id',
+  'Origen',
+  'Destino',
+  'Distancia (km)',
+  'Precio',
+  'Completado',
+  'Borrar'
+]
 
 const OrderList = ({ orders }) => {
   return (
-    <>
+    <Paper>
       {orders?.length > 0 ? (
         <Table size="small">
           <TableHead>
@@ -26,8 +35,8 @@ const OrderList = ({ orders }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.map((order, index) => (
-              <OrderListItem {...order} key={index} />
+            {orders.map((order) => (
+              <OrderListItem {...order} key={order.id} />
             ))}
           </TableBody>
         </Table>
@@ -36,7 +45,7 @@ const OrderList = ({ orders }) => {
           No hay pedidos.
         </Typography>
       )}
-    </>
+    </Paper>
   )
 }
 

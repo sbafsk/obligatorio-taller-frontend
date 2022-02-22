@@ -6,8 +6,24 @@ import { Delete as DeleteIcon } from '@mui/icons-material'
 import { onDeleteOrder, onCompleteOrder } from '../../../../store/actions'
 import { deleteOrder, completeOrder } from '../../../../services/api'
 
-const OrderListItem = ({ id, title, completed }) => {
+const OrderListItem = ({
+  id,
+  ciudad_destino,
+  ciudad_origen,
+  categoria,
+  distancia,
+  precio,
+  completed
+}) => {
   const userLogged = useSelector((state) => state.userLogged)
+  // todo getCityName
+  const origen = useSelector((state) =>
+    state.cities.find((c) => Number(c.id) === ciudad_origen)
+  )
+  const destino = useSelector((state) =>
+    state.cities.find((c) => Number(c.id) === ciudad_destino)
+  )
+
   const dispatch = useDispatch()
 
   const handleDelete = async (id) => {
@@ -31,7 +47,10 @@ const OrderListItem = ({ id, title, completed }) => {
   return (
     <TableRow>
       <TableCell>{id}</TableCell>
-      <TableCell>{title}</TableCell>
+      <TableCell>{origen?.nombre}</TableCell>
+      <TableCell>{destino?.nombre}</TableCell>
+      <TableCell>{distancia}</TableCell>
+      <TableCell>$ {precio}</TableCell>
       <TableCell>
         <Checkbox
           checked={completed}
