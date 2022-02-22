@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Paper } from '@mui/material'
+import { Paper, Typography } from '@mui/material'
 
 import TopList from './TopList'
 import BarChartCity from './BarChartCity'
@@ -14,13 +14,24 @@ const Stats = () => {
     <Paper
       sx={{
         display: 'flex',
-        flexDirection: 'column',
-        px: 24
+        flexDirection: 'column'
       }}
     >
-      <TopList orders={orders} cities={cities} departaments={departaments} />
-      <BarChartCity orders={orders} cities={cities} />
-      <BarChartCategory orders={orders} categories={categories} />
+      {orders.length > 0 ? (
+        <>
+          <TopList
+            orders={orders}
+            cities={cities}
+            departaments={departaments}
+          />
+          <BarChartCity orders={orders} cities={cities} />
+          <BarChartCategory orders={orders} categories={categories} />
+        </>
+      ) : (
+        <Typography variant="subtitle" sx={{ p: 12, m: '0 auto' }}>
+          No tiene envios registrados como para generar stats.
+        </Typography>
+      )}
     </Paper>
   )
 }

@@ -24,7 +24,9 @@ const Routes = () => {
   useEffect(() => {
     if (userLogged !== null) {
       const location =
-        pathname !== paths.login && pathname !== paths.root
+        pathname !== paths.login &&
+        pathname !== paths.root &&
+        pathname !== paths.register
           ? pathname
           : paths.dashboard + '/list'
       history.push(location)

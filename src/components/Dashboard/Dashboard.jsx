@@ -40,6 +40,7 @@ const Dashboard = () => {
     () =>
       (async () => {
         try {
+          dispatch(onLoading(true))
           const ordersResponse = await getOrders(userLogged)
           const citiesResponse = await getCities(userLogged)
           const departamentsResponse = await getDepartaments(userLogged)
@@ -61,7 +62,7 @@ const Dashboard = () => {
   )
 
   return (
-    <Box sx={{ width: '100vw', bgcolor: '#fafafa' }}>
+    <Box sx={{ minHeight: '100vh', width: '100vw', bgcolor: '#fafafa' }}>
       <Header />
       {loading ? (
         <CircularProgress
@@ -69,7 +70,7 @@ const Dashboard = () => {
           sx={{ m: '100px auto', display: 'block' }}
         />
       ) : (
-        <Container sx={{ p: 4 }}>
+        <Container sx={{ p: 6, mx: '10vw', width: 'auto' }}>
           <Switch>
             <Route exact path={`${path}/create`}>
               <OrderForm setSnackData={setSnackData} />

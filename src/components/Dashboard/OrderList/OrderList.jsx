@@ -65,7 +65,7 @@ const OrderList = ({ orders, setSnackData }) => {
           </Typography>
         </Box>
       ) : (
-        <Typography variant="subtitle" sx={{ mx: 12 }}>
+        <Typography variant="subtitle" sx={{ p: 12, m: '0 auto' }}>
           No tiene envios registrados.
         </Typography>
       )}
