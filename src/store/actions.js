@@ -11,7 +11,7 @@ const onLoadOrders = (data) => {
   return { type: actionTypes.ON_LOAD_ORDERS, payload: data.envios }
 }
 
-const onLoadCities = ({ data }) => {
+const onLoadCities = (data) => {
   return { type: actionTypes.ON_LOAD_CITIES, payload: data.ciudades }
 }
 
@@ -45,6 +45,13 @@ const onCompleteOrder = (orderId) => {
   }
 }
 
+const onLoading = (value) => {
+  return {
+    type: actionTypes.SET_LOADING,
+    payload: value
+  }
+}
+
 const onLogout = () => {
   return {
     type: actionTypes.ON_LOG_OUT
@@ -60,5 +67,6 @@ export {
   onAddOrder,
   onDeleteOrder,
   onCompleteOrder,
-  onLogout
+  onLogout,
+  onLoading
 }

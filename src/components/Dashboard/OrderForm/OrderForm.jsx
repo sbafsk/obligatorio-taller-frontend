@@ -23,12 +23,26 @@ const customStyles = {
     margin: '10px 0'
   })
 }
-const OrderForm = () => {
+const OrderForm = ({ setSnackData }) => {
   const { cities, categories, userLogged } = useSelector((state) => state)
   const dispatch = useDispatch()
 
+  const {
+    control,
+    handleSubmit,
+    register,
+    formState: { errors },
+    reset
+  } = useForm({
+    defaultValues: {
+      ciudadOrigen: '',
+      ciudadDestino: '',
+      categoria: '',
+      peso: ''
+    }
+  })
+
   const onSubmit = async (data) => {
-    console.log('data', data)
     try {
       const distance = calculateDistance(
         cities.find((c) => c.id === data.ciudadOrigen.value),
@@ -44,30 +58,19 @@ const OrderForm = () => {
         distancia: distance,
         precio: price
       }
-      // todo createOrder
-
-      await addOrder(order, userLogged)
-      dispatch(onAddOrder(data))
+      const orderId = await addOrder(order, userLogged)
+      dispatch(onAddOrder({ id: orderId, ...order }))
+      setSnackData({ open: true, message: 'Envio creado', variant: 'success' })
+      reset()
     } catch (error) {
-      alert(error.message)
+      setSnackData({
+        open: true,
+        message: 'Error al intentar crear',
+        variant: 'error'
+      })
     }
   }
 
-  const {
-    control,
-    handleSubmit,
-    register,
-    formState: { errors }
-  } = useForm({
-    defaultValues: {
-      ciudadOrigen: '',
-      ciudadDestino: '',
-      categoria: '',
-      peso: ''
-    }
-  })
-
-  console.log(errors)
   return (
     <Paper>
       <Box
@@ -166,7 +169,8 @@ const OrderForm = () => {
                   )
                 }
                 {...register('peso', {
-                  required: true
+                  required: true,
+                  valueAsNumber: true
                 })}
                 InputProps={{
                   endAdornment: (

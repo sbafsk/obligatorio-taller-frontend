@@ -27,17 +27,22 @@ const reducer = (state = initialState, action) => {
   const { type, payload } = action
   switch (type) {
     case actionTypes.ON_USER_LOGGED:
-      return { ...state, userLogged: payload, loading: false }
+      return { ...state, userLogged: payload }
     case actionTypes.ON_LOAD_ORDERS:
-      return { ...state, orders: payload, loading: false }
+      return { ...state, orders: payload }
     case actionTypes.ON_LOAD_CITIES:
-      return { ...state, cities: payload, loading: false }
+      return { ...state, cities: payload }
     case actionTypes.ON_LOAD_DEPARTAMENTS:
-      return { ...state, departaments: payload, loading: false }
+      return { ...state, departaments: payload }
     case actionTypes.ON_LOAD_CATEGORIES:
-      return { ...state, categories: payload, loading: false }
+      return { ...state, categories: payload }
     case actionTypes.ON_ADD_ORDER: {
-      return { ...state, orders: [...state.orders, payload] }
+      const order = {
+        ciudad_destino: payload.idCiudadDestino,
+        ciudad_origen: payload.idCiudadOrigen,
+        ...payload
+      }
+      return { ...state, orders: [...state.orders, order] }
     }
     case actionTypes.ON_DELETE_ORDER: {
       const newOrderList = state.orders.filter(

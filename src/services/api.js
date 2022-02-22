@@ -45,19 +45,17 @@ const onLogin = async (data) => {
   }
 }
 
-const getCities = async (userData, idDepartament = null) => {
+const getCities = async (userData, id = null) => {
   try {
     const response = await api({
-      url: `ciudades.php ${
-        idDepartament ? `idDepartamento=${idDepartament}` : ''
-      }`,
+      url: `ciudades.php ${id ? `idDepartamento=${id}` : ''}`,
       method: 'get',
       headers: {
         apikey: userData.apiKey
       }
     })
     if (response.status === 200) {
-      return response
+      return response.data
     } else {
       return Promise.reject({
         message: 'Ha ocurrido un error en la petición',
@@ -157,7 +155,7 @@ const addOrder = async (order, userData) => {
     })
 
     if (response.status === 200 || response.status === 201) {
-      return response.data
+      return response.data.idEnvio
     } else {
       return Promise.reject({
         message: 'Ha ocurrido un error en la petición',

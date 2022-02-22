@@ -1,13 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
-import { Box, CircularProgress, Container } from '@mui/material'
+import {
+  Box,
+  Snackbar,
+  Alert,
+  CircularProgress,
+  Container
+} from '@mui/material'
 
 import {
   onLoadOrders,
   onLoadCities,
   onLoadCategories,
-  onLoadComplete
+  onLoading
 } from '../../store/actions'
 import { getOrders, getCities, getCategories } from '../../services/api'
 import Header from '../Header/Header'
@@ -17,8 +23,10 @@ import OrderForm from './OrderForm'
 import Stats from './Stats'
 
 const Dashboard = () => {
-  const { userLogged, orders, loading } = useSelector((state) => state)
+  const initialState = { message: '', open: false }
+  const [snackData, setSnackData] = useState(initialState)
 
+  const { userLogged, orders, loading } = useSelector((state) => state)
   const dispatch = useDispatch()
   const { path } = useRouteMatch()
 
@@ -32,10 +40,14 @@ const Dashboard = () => {
           dispatch(onLoadOrders(ordersResponse))
           dispatch(onLoadCities(citiesResponse))
           dispatch(onLoadCategories(categoryResponse))
-          dispatch(onLoadComplete())
         } catch (error) {
-          alert(error.message)
+          setSnackData({
+            open: true,
+            message: error.message,
+            variant: 'error'
+          })
         }
+        dispatch(onLoading(false))
       })(),
     []
   )
@@ -54,10 +66,10 @@ const Dashboard = () => {
         >
           <Switch>
             <Route exact path={`${path}/create`}>
-              <OrderForm />
+              <OrderForm setSnackData={setSnackData} />
             </Route>
             <Route exact path={`${path}/list`}>
-              <OrderList orders={orders} />
+              <OrderList orders={orders} setSnackData={setSnackData} />
             </Route>
             <Route exact path={`${path}/stats`}>
               <Stats />
@@ -65,6 +77,19 @@ const Dashboard = () => {
           </Switch>
         </Container>
       )}
+      <Snackbar
+        open={snackData.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackData(initialState)}
+      >
+        <Alert
+          onClose={() => setSnackData(initialState)}
+          severity={snackData.variant}
+          sx={{ width: '100%' }}
+        >
+          {snackData.message}
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }

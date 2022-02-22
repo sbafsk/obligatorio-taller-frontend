@@ -1,7 +1,6 @@
 import getDistance from 'geolib/es/getDistance'
 
 export const calculateDistance = (origen, destino) => {
-  console.log({ origen, destino })
   return (
     getDistance(
       { latitude: origen.latitud, longitude: origen.longitud },
