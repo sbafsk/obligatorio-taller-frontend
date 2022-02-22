@@ -3,7 +3,7 @@ import { Switch, Route, useHistory, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import Dashboard from '../components/Dashboard'
-import { Login, Register } from '../components/Login'
+import { Login, Signup } from '../components/Login'
 import PrivateRoute from './PrivateRoute'
 import Error from './Error'
 
@@ -26,8 +26,7 @@ const Routes = () => {
       const location =
         pathname !== paths.login && pathname !== paths.root
           ? pathname
-          : paths.dashboard
-      console.log(location)
+          : paths.dashboard + '/list'
       history.push(location)
     }
   }, [userLogged])
@@ -36,7 +35,7 @@ const Routes = () => {
     <Switch>
       <Route exact path={paths.root} component={Login} />
       <Route exact path={paths.login} component={Login} />
-      {/* <Route exact path={paths.register} component={Register} /> */}
+      <Route exact path={paths.register} component={Signup} />
       <PrivateRoute path={paths.dashboard}>
         <Dashboard />
       </PrivateRoute>
