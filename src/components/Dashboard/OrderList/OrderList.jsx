@@ -40,7 +40,7 @@ const OrderList = ({ orders, setSnackData }) => {
     <Paper sx={{ display: 'flex', justifyContent: 'center' }}>
       {orders?.length > 0 ? (
         <Box sx={{ p: 4 }}>
-          <Table size="small" sx={{ mb: 8 }}>
+          <Table size="small" sx={{ mb: 4 }}>
             <TableHead>
               <TableRow>
                 {tableColums.map((val, i) => (
@@ -60,12 +60,12 @@ const OrderList = ({ orders, setSnackData }) => {
               ))}
             </TableBody>
           </Table>
-          <Typography variant="subtitle" sx={{ margin: '100px', height: 20 }}>
-            Costo total de envios registrados: $ {costoTotal.toFixed(2)}
+          <Typography variant="subtitle" sx={{ mx: 12, height: 20 }}>
+            Costo total de envios registrados: <b>$ {costoTotal.toFixed(2)}</b>
           </Typography>
         </Box>
       ) : (
-        <Typography variant="subtitle" sx={{ padding: '100px' }}>
+        <Typography variant="subtitle" sx={{ mx: 12 }}>
           No tiene envios registrados.
         </Typography>
       )}

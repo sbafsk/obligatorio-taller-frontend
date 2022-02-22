@@ -180,7 +180,9 @@ const OrderForm = ({ setSnackData }) => {
                 name="peso"
                 helperText={
                   errors?.peso && (
-                    <Box sx={{ color: '#d32f2f' }}>Ingrese el peso en kg</Box>
+                    <span style={{ color: '#d32f2f' }}>
+                      Ingrese el peso en kg
+                    </span>
                   )
                 }
                 {...register('peso', {
