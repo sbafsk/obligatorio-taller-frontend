@@ -12,6 +12,7 @@ const onSignup = async (data) => {
       method: 'post',
       data: { usuario: data.email, password: data.password }
     })
+
     if (response.status === 200) {
       return response.data
     } else if (response.status === 409) {

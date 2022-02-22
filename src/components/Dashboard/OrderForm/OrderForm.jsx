@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
 import Select from 'react-select'
@@ -24,6 +24,7 @@ const customStyles = {
   })
 }
 const OrderForm = ({ setSnackData }) => {
+  const [distance, setDistance] = useState()
   const { cities, categories, userLogged } = useSelector((state) => state)
   const dispatch = useDispatch()
 
@@ -31,6 +32,7 @@ const OrderForm = ({ setSnackData }) => {
     control,
     handleSubmit,
     register,
+    watch,
     formState: { errors },
     reset
   } = useForm({
@@ -42,12 +44,22 @@ const OrderForm = ({ setSnackData }) => {
     }
   })
 
+  const { ciudadOrigen, ciudadDestino } = watch()
+  useEffect(() => {
+    if (!!ciudadOrigen && !!ciudadDestino) {
+      setDistance(
+        calculateDistance(
+          cities.find((c) => c.id == ciudadOrigen.value),
+          cities.find((c) => c.id == ciudadDestino.value)
+        )
+      )
+    } else {
+      setDistance(null)
+    }
+  }, [ciudadDestino, ciudadOrigen])
+
   const onSubmit = async (data) => {
     try {
-      const distance = calculateDistance(
-        cities.find((c) => c.id === data.ciudadOrigen.value),
-        cities.find((c) => c.id === data.ciudadDestino.value)
-      )
       const price = calculateOrderTotal(distance, data.peso)
 
       const order = {
@@ -85,12 +97,13 @@ const OrderForm = ({ setSnackData }) => {
           <Controller
             name="ciudadOrigen"
             control={control}
-            render={({ field: { onChange } }) => (
+            render={({ field: { onChange, value } }) => (
               <Select
                 {...register('ciudadOrigen', {
                   required: 'Seleccione una ciudad de origen'
                 })}
                 onChange={onChange}
+                value={value}
                 styles={customStyles}
                 options={
                   cities &&
@@ -108,12 +121,13 @@ const OrderForm = ({ setSnackData }) => {
           <Controller
             name="ciudadDestino"
             control={control}
-            render={({ field: { onChange } }) => (
+            render={({ field: { onChange, value } }) => (
               <Select
                 {...register('ciudadDestino', {
                   required: 'Seleccione una ciudad de destino'
                 })}
                 onChange={onChange}
+                value={value}
                 styles={customStyles}
                 options={
                   cities &&
@@ -131,12 +145,13 @@ const OrderForm = ({ setSnackData }) => {
           <Controller
             name="categoria"
             control={control}
-            render={({ field: { onChange } }) => (
+            render={({ field: { onChange, value } }) => (
               <Select
                 {...register('categoria', {
                   required: 'Seleccione una categoria'
                 })}
                 onChange={onChange}
+                value={value}
                 styles={customStyles}
                 options={
                   categories &&
@@ -165,7 +180,9 @@ const OrderForm = ({ setSnackData }) => {
                 name="peso"
                 helperText={
                   errors?.peso && (
-                    <Box sx={{ color: '#d32f2f' }}>Ingrese el peso en kg</Box>
+                    <span style={{ color: '#d32f2f' }}>
+                      Ingrese el peso en kg
+                    </span>
                   )
                 }
                 {...register('peso', {
@@ -180,6 +197,10 @@ const OrderForm = ({ setSnackData }) => {
               />
             )}
           />
+
+          <Box sx={{ height: 16 }}>
+            {distance && <Typography>Distancia {distance} km</Typography>}
+          </Box>
           <Button type="submit" fullWidth variant="contained" sx={{ my: 3 }}>
             Crear
           </Button>

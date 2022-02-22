@@ -40,6 +40,7 @@ const reducer = (state = initialState, action) => {
       const order = {
         ciudad_destino: payload.idCiudadDestino,
         ciudad_origen: payload.idCiudadOrigen,
+        id_categoria: payload.idCategoria,
         ...payload
       }
       return { ...state, orders: [...state.orders, order] }

@@ -15,7 +15,12 @@ import { onLogin } from '../../services/api'
 import { paths } from '../../routes'
 
 const Login = () => {
-  const { control, register, handleSubmit } = useForm({
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
     defaultValues: {
       email: '',
       password: ''
@@ -59,18 +64,25 @@ const Login = () => {
               <TextField
                 {...field}
                 {...register('email', {
-                  required: true,
-                  pattern:
-                    '^([a-zA-Z0-9_-.]+)@([a-zA-Z0-9_-.]+).([a-zA-Z]{2,5})$'
+                  required: 'Email requerido',
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: 'Ingrese un email valido'
+                  }
                 })}
                 margin="normal"
-                required
                 fullWidth
                 id="email"
                 label="Email Address"
                 name="email"
-                autoComplete="email"
                 autoFocus
+                helperText={
+                  errors.email && (
+                    <span style={{ color: '#d32f2f' }}>
+                      {errors.email.message}
+                    </span>
+                  )
+                }
               />
             )}
           />
@@ -85,13 +97,18 @@ const Login = () => {
                   minLength: 6
                 })}
                 margin="normal"
-                required
                 fullWidth
                 name="password"
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="current-password"
+                helperText={
+                  errors.password && (
+                    <span style={{ color: '#d32f2f' }}>
+                      Password requerido.
+                    </span>
+                  )
+                }
               />
             )}
           />

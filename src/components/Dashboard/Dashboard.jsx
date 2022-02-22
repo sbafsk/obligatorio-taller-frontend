@@ -13,9 +13,15 @@ import {
   onLoadOrders,
   onLoadCities,
   onLoadCategories,
-  onLoading
+  onLoading,
+  onLoadDepartaments
 } from '../../store/actions'
-import { getOrders, getCities, getCategories } from '../../services/api'
+import {
+  getOrders,
+  getCities,
+  getCategories,
+  getDepartaments
+} from '../../services/api'
 import Header from '../Header/Header'
 import OrderList from './OrderList'
 import OrderForm from './OrderForm'
@@ -34,11 +40,14 @@ const Dashboard = () => {
     () =>
       (async () => {
         try {
+          dispatch(onLoading(true))
           const ordersResponse = await getOrders(userLogged)
           const citiesResponse = await getCities(userLogged)
+          const departamentsResponse = await getDepartaments(userLogged)
           const categoryResponse = await getCategories(userLogged)
           dispatch(onLoadOrders(ordersResponse))
           dispatch(onLoadCities(citiesResponse))
+          dispatch(onLoadDepartaments(departamentsResponse))
           dispatch(onLoadCategories(categoryResponse))
         } catch (error) {
           setSnackData({
@@ -53,7 +62,7 @@ const Dashboard = () => {
   )
 
   return (
-    <Box>
+    <Box sx={{ minHeight: '100vh', width: '100vw', bgcolor: '#fafafa' }}>
       <Header />
       {loading ? (
         <CircularProgress
@@ -61,9 +70,7 @@ const Dashboard = () => {
           sx={{ m: '100px auto', display: 'block' }}
         />
       ) : (
-        <Container
-          sx={{ height: '100vh', width: 'auto', bgcolor: '#fafafa', pt: 4 }}
-        >
+        <Container sx={{ p: 6, mx: '10vw', width: 'auto' }}>
           <Switch>
             <Route exact path={`${path}/create`}>
               <OrderForm setSnackData={setSnackData} />
