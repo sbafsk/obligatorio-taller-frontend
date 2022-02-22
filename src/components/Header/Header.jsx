@@ -6,9 +6,9 @@ import NavBar from './NavBar'
 
 const Header = () => {
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ width: '100vw' }}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <Avatar alt="Profile Picture" src={'http://is.am/5z3c'} />
+        <Avatar alt="Logo" src={'http://is.am/5z3c'} />
         <NavBar />
         <LogoutButton />
       </Toolbar>

@@ -11,21 +11,22 @@ import {
 } from '@mui/material'
 
 import { onUserLogged } from '../../store/actions'
-import { onLogin } from '../../services/api'
+import { onSignup } from '../../services/api'
 import { paths } from '../../routes'
 
-const Login = () => {
+const Signup = () => {
   const { control, register, handleSubmit } = useForm({
     defaultValues: {
       email: '',
       password: ''
     }
   })
+
   const dispatch = useDispatch()
 
   const onSubmit = async (data) => {
     try {
-      const { apiKey, id } = await onLogin(data)
+      const { apiKey, id } = await onSignup(data)
       sessionStorage.setItem('current_user', JSON.stringify({ apiKey, id }))
       dispatch(onUserLogged({ apiKey, id }))
     } catch (error) {
@@ -44,7 +45,7 @@ const Login = () => {
         }}
       >
         <Typography component="h1" variant="h5">
-          Iniciar Sesion
+          Registro de usuario
         </Typography>
         <Box
           component="form"
@@ -96,13 +97,13 @@ const Login = () => {
             )}
           />
           <Button type="submit" fullWidth variant="contained" sx={{ my: 3 }}>
-            Entrar
+            Registrar
           </Button>
-          No tienes cuenta ? <Link href={paths.register}>Registro</Link>
+          <Link href={paths.login}>Volver al Login</Link>
         </Box>
       </Box>
     </Container>
   )
 }
 
-export default Login
+export default Signup

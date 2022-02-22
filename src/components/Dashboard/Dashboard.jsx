@@ -1,10 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
-import { Container, Typography } from '@mui/material'
+import {
+  Box,
+  Snackbar,
+  Alert,
+  CircularProgress,
+  Container
+} from '@mui/material'
 
-import { onLoadOrders } from '../../store/actions'
-import { getOrders } from '../../services/api'
+import {
+  onLoadOrders,
+  onLoadCities,
+  onLoadCategories,
+  onLoading
+} from '../../store/actions'
+import { getOrders, getCities, getCategories } from '../../services/api'
 import Header from '../Header/Header'
 import OrderList from './OrderList'
 import OrderForm from './OrderForm'
@@ -12,9 +23,10 @@ import OrderForm from './OrderForm'
 import Stats from './Stats'
 
 const Dashboard = () => {
-  const userLogged = useSelector((state) => state.userLogged)
-  const orders = useSelector((state) => state.orders)
+  const initialState = { message: '', open: false }
+  const [snackData, setSnackData] = useState(initialState)
 
+  const { userLogged, orders, loading } = useSelector((state) => state)
   const dispatch = useDispatch()
   const { path } = useRouteMatch()
 
@@ -23,30 +35,62 @@ const Dashboard = () => {
       (async () => {
         try {
           const ordersResponse = await getOrders(userLogged)
+          const citiesResponse = await getCities(userLogged)
+          const categoryResponse = await getCategories(userLogged)
           dispatch(onLoadOrders(ordersResponse))
+          dispatch(onLoadCities(citiesResponse))
+          dispatch(onLoadCategories(categoryResponse))
         } catch (error) {
-          console.log(error.message)
+          setSnackData({
+            open: true,
+            message: error.message,
+            variant: 'error'
+          })
         }
+        dispatch(onLoading(false))
       })(),
     []
   )
 
   return (
-    <Container>
+    <Box>
       <Header />
-      ## Dashboard ##
-      <Switch>
-        <Route exact path={`${path}/list`}>
-          <Typography variant="h2">List</Typography>
-          <OrderForm />
-          <OrderList orders={orders} />
-        </Route>
-        <Route exact path={`${path}/stats`}>
-          <Typography variant="h2">Stats</Typography>
-          <Stats />
-        </Route>
-      </Switch>
-    </Container>
+      {loading ? (
+        <CircularProgress
+          size={75}
+          sx={{ m: '100px auto', display: 'block' }}
+        />
+      ) : (
+        <Container
+          sx={{ height: '100vh', width: 'auto', bgcolor: '#fafafa', pt: 4 }}
+        >
+          <Switch>
+            <Route exact path={`${path}/create`}>
+              <OrderForm setSnackData={setSnackData} />
+            </Route>
+            <Route exact path={`${path}/list`}>
+              <OrderList orders={orders} setSnackData={setSnackData} />
+            </Route>
+            <Route exact path={`${path}/stats`}>
+              <Stats />
+            </Route>
+          </Switch>
+        </Container>
+      )}
+      <Snackbar
+        open={snackData.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackData(initialState)}
+      >
+        <Alert
+          onClose={() => setSnackData(initialState)}
+          severity={snackData.variant}
+          sx={{ width: '100%' }}
+        >
+          {snackData.message}
+        </Alert>
+      </Snackbar>
+    </Box>
   )
 }
 
