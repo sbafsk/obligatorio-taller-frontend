@@ -9,7 +9,7 @@ const LogoutButton = () => {
   const dispatch = useDispatch()
 
   const onHandleLogout = () => {
-    sessionStorage.removeItem('myOrderAppUser')
+    sessionStorage.removeItem('current_user')
     dispatch(onLogout())
   }
   return (
