@@ -1,30 +1,35 @@
-import {
-  ON_LOAD_ORDERS,
-  ON_ADD_ORDER,
-  ON_DELETE_ORDER,
-  ON_COMPLETE_ORDER,
-  ON_LOG_OUT,
-  ON_USER_LOGGED
-} from './constants'
+import { actionTypes } from './reducer'
 
 const onUserLogged = (payload) => {
   return {
-    type: ON_USER_LOGGED,
+    type: actionTypes.ON_USER_LOGGED,
     payload: payload
   }
 }
 
-const onLoadOrders = (orders) => {
-  return { type: ON_LOAD_ORDERS, payload: orders }
+const onLoadOrders = (data) => {
+  return { type: actionTypes.ON_LOAD_ORDERS, payload: data.envios }
+}
+
+const onLoadCities = ({ data }) => {
+  return { type: actionTypes.ON_LOAD_CITIES, payload: data.ciudades }
+}
+
+const onLoadDepartaments = (data) => {
+  return { type: actionTypes.ON_LOAD_DEPARTAMENTS, payload: data.departamentos }
+}
+
+const onLoadCategories = (data) => {
+  return { type: actionTypes.ON_LOAD_CATEGORIES, payload: data.categorias }
 }
 
 const onAddOrder = (order) => {
-  return { type: ON_ADD_ORDER, payload: order }
+  return { type: actionTypes.ON_ADD_ORDER, payload: order }
 }
 
 const onDeleteOrder = (orderId) => {
   return {
-    type: ON_DELETE_ORDER,
+    type: actionTypes.ON_DELETE_ORDER,
     payload: {
       id: orderId
     }
@@ -33,7 +38,7 @@ const onDeleteOrder = (orderId) => {
 
 const onCompleteOrder = (orderId) => {
   return {
-    type: ON_COMPLETE_ORDER,
+    type: actionTypes.ON_COMPLETE_ORDER,
     payload: {
       id: orderId
     }
@@ -42,13 +47,16 @@ const onCompleteOrder = (orderId) => {
 
 const onLogout = () => {
   return {
-    type: ON_LOG_OUT
+    type: actionTypes.ON_LOG_OUT
   }
 }
 
 export {
   onUserLogged,
   onLoadOrders,
+  onLoadCities,
+  onLoadDepartaments,
+  onLoadCategories,
   onAddOrder,
   onDeleteOrder,
   onCompleteOrder,

@@ -1,140 +1,209 @@
-const BASE_URL = 'https://jsonplaceholder.typicode.com'
+import axios from 'axios'
 
-/**
- * Login
- * @param {object} userData
- * @returns Promise
- */
-const onLogin = async (userData) => {
+const api = axios.create({
+  baseURL: 'https://envios.develotion.com',
+  withCredentials: false
+})
+
+const onSignup = async (data) => {
   try {
-    return Promise.resolve({
-      id: 1,
-      username: 'TestingUser',
-      token: 'fmpRuzZMhZa6fMECtH6Y5UmH4hz6DUxv'
+    const response = await api({
+      url: 'usuarios.php',
+      method: 'post',
+      data: { usuario: data.email, password: data.password }
     })
-    // Esto es lo que hay que hacer para comunicarme con la API
-    /*
-    const response = await fetch(`${BASE_URL}/login`, {
-      headers: {
-        'content-type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify(userData),
-    });
+    if (response.status === 200) {
+      return response.data
+    } else if (response.status === 409) {
+      throw new Error(response.mensaje)
+    }
+  } catch (error) {
+    console.log(error)
+    throw new Error(error.message)
+  }
+}
+
+const onLogin = async (data) => {
+  try {
+    const response = await api({
+      url: 'login.php',
+      method: 'post',
+      data: { usuario: data.email, password: data.password }
+    })
 
     if (response.status === 200) {
-      return response.json();
+      return response.data
     } else {
       return {
         message: 'Ha ocurrido un error en la petición',
-        status: response.status,
-      };
+        status: response.status
+      }
     }
-    */
   } catch (error) {
-    return Promise.reject({
-      message: error.message
-    })
+    console.log(error)
+    throw new Error(error.message)
   }
 }
-/**
- * Get orders from the given user
- * @param {object} userData
- * @returns Promise
- */
+
+const getCities = async (userData, idDepartament = null) => {
+  try {
+    const response = await api({
+      url: `ciudades.php ${
+        idDepartament ? `idDepartamento=${idDepartament}` : ''
+      }`,
+      method: 'get',
+      headers: {
+        apikey: userData.apiKey
+      }
+    })
+    if (response.status === 200) {
+      return response
+    } else {
+      return Promise.reject({
+        message: 'Ha ocurrido un error en la petición',
+        status: response.status
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    throw new Error(error.message)
+  }
+}
+
+const getDepartaments = async (userData) => {
+  try {
+    const response = await api({
+      url: 'departamentos.php',
+      method: 'get',
+      headers: {
+        apikey: userData.apiKey
+      }
+    })
+
+    if (response.status === 200) {
+      return response.data
+    } else {
+      return Promise.reject({
+        message: 'Ha ocurrido un error en la petición',
+        status: response.status
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    throw new Error(error.message)
+  }
+}
+
+const getCategories = async (userData) => {
+  try {
+    const response = await api({
+      url: 'categorias.php',
+      method: 'get',
+      headers: {
+        apikey: userData.apiKey
+      }
+    })
+
+    if (response.status === 200) {
+      return response.data
+    } else {
+      return Promise.reject({
+        message: 'Ha ocurrido un error en la petición',
+        status: response.status
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    throw new Error(error.message)
+  }
+}
+
 const getOrders = async (userData) => {
-  const response = await fetch(`${BASE_URL}/todos?userId=${userData.id}`, {
-    headers: {
-      'content-type': 'application/json',
-      authorization: userData.token
-    },
-    method: 'GET'
-  })
-
-  if (response.status === 200) {
-    return response.json()
-  } else {
-    return Promise.reject({
-      message: 'Ha ocurrido un error en la petición',
-      status: response.status
+  try {
+    const response = await api({
+      url: `envios.php?idUsuario=${userData.id}`,
+      method: 'get',
+      headers: {
+        apikey: userData.apiKey
+      }
     })
+
+    if (response.status === 200) {
+      return response.data
+    } else {
+      return Promise.reject({
+        message: 'Ha ocurrido un error en la petición',
+        status: response.status
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    throw new Error(error.message)
   }
 }
-/**
- * Add a new order
- * @param {object} order
- * @param {object} userData
- * @returns Promise
- */
+
 const addOrder = async (order, userData) => {
-  const response = await fetch(`${BASE_URL}/orders`, {
-    headers: {
-      'content-type': 'application/json',
-      authorization: userData.token
-    },
-    body: JSON.stringify(order),
-    method: 'POST'
-  })
-
-  if (response.status === 200 || response.status === 201) {
-    return response.json()
-  } else {
-    return Promise.reject({
-      message: 'Ha ocurrido un error en la petición',
-      status: response.status
+  try {
+    const response = await api({
+      url: 'envios.php',
+      method: 'post',
+      headers: {
+        apikey: userData.apiKey
+      },
+      data: {
+        ...order,
+        idUsuario: userData.id
+      }
     })
+
+    if (response.status === 200 || response.status === 201) {
+      return response.data
+    } else {
+      return Promise.reject({
+        message: 'Ha ocurrido un error en la petición',
+        status: response.status
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    throw new Error(error.message)
   }
 }
 
-/**
- * Delete order
- * @param {number} orderId
- * @param {object} userData
- * @returns Promise
- */
 const deleteOrder = async (orderId, userData) => {
-  const response = await fetch(`${BASE_URL}/orders?id=${orderId}`, {
-    headers: {
-      'content-type': 'application/json',
-      authorization: userData.token
-    },
-    method: 'DELETE'
-  })
-
-  if (response.status === 200) {
-    return response.json()
-  } else {
-    return Promise.reject({
-      message: 'Ha ocurrido un error en la petición',
-      status: response.status
+  try {
+    const response = await api({
+      url: 'envios.php',
+      method: 'delete',
+      headers: {
+        apikey: userData.apiKey
+      },
+      data: {
+        idEnvio: orderId
+      }
     })
+
+    if (response.status === 200) {
+      return response.data
+    } else {
+      return Promise.reject({
+        message: 'Ha ocurrido un error en la petición',
+        status: response.status
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    throw new Error(error.message)
   }
 }
 
-/**
- * Complete order
- * @param {number} orderId
- * @param {object} userData
- * @returns Promise
- */
-const completeOrder = async (order, userData) => {
-  const response = await fetch(`${BASE_URL}/orders?id=${order.id}`, {
-    headers: {
-      'content-type': 'application/json',
-      authorization: userData.token
-    },
-    body: JSON.stringify(order),
-    method: 'UPDATE'
-  })
-
-  if (response.status === 200) {
-    return response.json()
-  } else {
-    return Promise.reject({
-      message: 'Ha ocurrido un error en la petición',
-      status: response.status
-    })
-  }
+export {
+  onSignup,
+  onLogin,
+  getCities,
+  getDepartaments,
+  getCategories,
+  getOrders,
+  deleteOrder,
+  addOrder
 }
-
-export { onLogin, deleteOrder, getOrders, addOrder, completeOrder }
