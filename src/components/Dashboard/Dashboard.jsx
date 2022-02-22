@@ -13,9 +13,15 @@ import {
   onLoadOrders,
   onLoadCities,
   onLoadCategories,
-  onLoading
+  onLoading,
+  onLoadDepartaments
 } from '../../store/actions'
-import { getOrders, getCities, getCategories } from '../../services/api'
+import {
+  getOrders,
+  getCities,
+  getCategories,
+  getDepartaments
+} from '../../services/api'
 import Header from '../Header/Header'
 import OrderList from './OrderList'
 import OrderForm from './OrderForm'
@@ -36,9 +42,11 @@ const Dashboard = () => {
         try {
           const ordersResponse = await getOrders(userLogged)
           const citiesResponse = await getCities(userLogged)
+          const departamentsResponse = await getDepartaments(userLogged)
           const categoryResponse = await getCategories(userLogged)
           dispatch(onLoadOrders(ordersResponse))
           dispatch(onLoadCities(citiesResponse))
+          dispatch(onLoadDepartaments(departamentsResponse))
           dispatch(onLoadCategories(categoryResponse))
         } catch (error) {
           setSnackData({
