@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom'
 
 const pages = [
   {
-    name: 'Listar Pedidos',
-    link: '/dashboard/list'
+    name: 'Agregar Envio',
+    link: '/dashboard/create'
   },
   {
-    name: 'Crear Pedido',
-    link: '/dashboard/create'
+    name: 'Listar Envios',
+    link: '/dashboard/list'
   },
   {
     name: 'Stats',
