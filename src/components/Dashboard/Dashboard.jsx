@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
-import { Box, CircularProgress, Container, Typography } from '@mui/material'
+import { Box, CircularProgress, Container } from '@mui/material'
 
 import {
   onLoadOrders,
   onLoadCities,
-  onLoadCategories
+  onLoadCategories,
+  onLoadComplete
 } from '../../store/actions'
 import { getOrders, getCities, getCategories } from '../../services/api'
 import Header from '../Header/Header'
@@ -25,13 +26,13 @@ const Dashboard = () => {
     () =>
       (async () => {
         try {
-          // load api
           const ordersResponse = await getOrders(userLogged)
           const citiesResponse = await getCities(userLogged)
           const categoryResponse = await getCategories(userLogged)
           dispatch(onLoadOrders(ordersResponse))
           dispatch(onLoadCities(citiesResponse))
           dispatch(onLoadCategories(categoryResponse))
+          dispatch(onLoadComplete())
         } catch (error) {
           alert(error.message)
         }
@@ -48,24 +49,17 @@ const Dashboard = () => {
           sx={{ m: '100px auto', display: 'block' }}
         />
       ) : (
-        <Container sx={{ w: 'auto' }}>
+        <Container
+          sx={{ height: '100vh', width: 'auto', bgcolor: '#fafafa', pt: 4 }}
+        >
           <Switch>
-            <Route exact path={`${path}/list`}>
-              <Typography variant="h4" align="center">
-                Lista de Pedidos
-              </Typography>
-              <OrderList orders={orders} />
-            </Route>
             <Route exact path={`${path}/create`}>
-              <Typography variant="h4" align="center">
-                Alta de Pedido
-              </Typography>
               <OrderForm />
             </Route>
+            <Route exact path={`${path}/list`}>
+              <OrderList orders={orders} />
+            </Route>
             <Route exact path={`${path}/stats`}>
-              <Typography variant="h4" align="center">
-                Stats
-              </Typography>
               <Stats />
             </Route>
           </Switch>

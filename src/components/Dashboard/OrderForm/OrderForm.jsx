@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
 import Select from 'react-select'
 import {
-  Paper,
-  Button,
-  TextField,
   Box,
+  Button,
+  FormHelperText,
   FormLabel,
-  InputAdornment
+  InputAdornment,
+  Paper,
+  TextField,
+  Typography
 } from '@mui/material'
 
 import { onAddOrder } from '../../../store/actions'
@@ -22,34 +24,28 @@ const customStyles = {
   })
 }
 const OrderForm = () => {
-  const { control, handleSubmit } = useForm({
-    defaultValues: {
-      ciudadOrigen: {},
-      ciudadDestino: {},
-      categoria: {},
-      peso: ''
-    }
-  })
   const { cities, categories, userLogged } = useSelector((state) => state)
   const dispatch = useDispatch()
 
   const onSubmit = async (data) => {
-    const distance = calculateDistance(
-      cities.find((c) => c.id === data.ciudadOrigen.value),
-      cities.find((c) => c.id === data.ciudadDestino.value)
-    )
-    const price = calculateOrderTotal(distance, data.peso)
-
-    const order = {
-      idCiudadOrigen: data.ciudadOrigen.value,
-      idCiudadDestino: data.ciudadDestino.value,
-      idCategoria: data.categoria.value,
-      peso: data.peso,
-      distancia: distance,
-      precio: price
-    }
-    // todo createOrder
+    console.log('data', data)
     try {
+      const distance = calculateDistance(
+        cities.find((c) => c.id === data.ciudadOrigen.value),
+        cities.find((c) => c.id === data.ciudadDestino.value)
+      )
+      const price = calculateOrderTotal(distance, data.peso)
+
+      const order = {
+        idCiudadOrigen: data.ciudadOrigen.value,
+        idCiudadDestino: data.ciudadDestino.value,
+        idCategoria: data.categoria.value,
+        peso: data.peso,
+        distancia: distance,
+        precio: price
+      }
+      // todo createOrder
+
       await addOrder(order, userLogged)
       dispatch(onAddOrder(data))
     } catch (error) {
@@ -57,8 +53,23 @@ const OrderForm = () => {
     }
   }
 
+  const {
+    control,
+    handleSubmit,
+    register,
+    formState: { errors }
+  } = useForm({
+    defaultValues: {
+      ciudadOrigen: '',
+      ciudadDestino: '',
+      categoria: '',
+      peso: ''
+    }
+  })
+
+  console.log(errors)
   return (
-    <Paper maxWidth="xs">
+    <Paper>
       <Box
         sx={{
           display: 'flex',
@@ -66,19 +77,17 @@ const OrderForm = () => {
           alignItems: 'center'
         }}
       >
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-          sx={{ mt: 1 }}
-        >
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
           <FormLabel>Ciudad Origen</FormLabel>
           <Controller
             name="ciudadOrigen"
             control={control}
-            render={({ field }) => (
+            render={({ field: { onChange } }) => (
               <Select
-                {...field}
+                {...register('ciudadOrigen', {
+                  required: 'Seleccione una ciudad de origen'
+                })}
+                onChange={onChange}
                 styles={customStyles}
                 options={
                   cities &&
@@ -87,13 +96,21 @@ const OrderForm = () => {
               />
             )}
           />
+          {errors?.ciudadOrigen && (
+            <FormHelperText error sx={{ ml: '14px' }}>
+              {errors.ciudadOrigen.message}
+            </FormHelperText>
+          )}
           <FormLabel>Ciudad Destino</FormLabel>
           <Controller
             name="ciudadDestino"
             control={control}
-            render={({ field }) => (
+            render={({ field: { onChange } }) => (
               <Select
-                {...field}
+                {...register('ciudadDestino', {
+                  required: 'Seleccione una ciudad de destino'
+                })}
+                onChange={onChange}
                 styles={customStyles}
                 options={
                   cities &&
@@ -102,13 +119,21 @@ const OrderForm = () => {
               />
             )}
           />
+          {errors?.ciudadDestino && (
+            <FormHelperText error sx={{ ml: '14px' }}>
+              {errors.ciudadDestino.message}
+            </FormHelperText>
+          )}
           <FormLabel>Categoria</FormLabel>
           <Controller
             name="categoria"
             control={control}
-            render={({ field }) => (
+            render={({ field: { onChange } }) => (
               <Select
-                {...field}
+                {...register('categoria', {
+                  required: 'Seleccione una categoria'
+                })}
+                onChange={onChange}
                 styles={customStyles}
                 options={
                   categories &&
@@ -117,6 +142,11 @@ const OrderForm = () => {
               />
             )}
           />
+          {errors?.categoria && (
+            <FormHelperText error sx={{ ml: '14px' }}>
+              {errors.categoria.message}
+            </FormHelperText>
+          )}
           <FormLabel>Peso del paquete</FormLabel>
           <Controller
             name="peso"
@@ -125,12 +155,19 @@ const OrderForm = () => {
               <TextField
                 {...field}
                 margin="normal"
-                required
                 fullWidth
                 size="small"
                 id="peso"
                 type="number"
                 name="peso"
+                helperText={
+                  errors?.peso && (
+                    <Box sx={{ color: '#d32f2f' }}>Ingrese el peso en kg</Box>
+                  )
+                }
+                {...register('peso', {
+                  required: true
+                })}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">kg</InputAdornment>
