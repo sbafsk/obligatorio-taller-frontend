@@ -61,7 +61,7 @@ const Dashboard = () => {
   )
 
   return (
-    <Box>
+    <Box sx={{ width: '100vw', bgcolor: '#fafafa' }}>
       <Header />
       {loading ? (
         <CircularProgress
@@ -69,9 +69,7 @@ const Dashboard = () => {
           sx={{ m: '100px auto', display: 'block' }}
         />
       ) : (
-        <Container
-          sx={{ height: '100vh', width: 'auto', bgcolor: '#fafafa', pt: 4 }}
-        >
+        <Container sx={{ p: 4 }}>
           <Switch>
             <Route exact path={`${path}/create`}>
               <OrderForm setSnackData={setSnackData} />
