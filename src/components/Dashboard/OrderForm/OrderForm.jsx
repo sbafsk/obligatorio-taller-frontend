@@ -9,8 +9,7 @@ import {
   FormLabel,
   InputAdornment,
   Paper,
-  TextField,
-  Typography
+  TextField
 } from '@mui/material'
 
 import { onAddOrder } from '../../../store/actions'
@@ -85,12 +84,13 @@ const OrderForm = ({ setSnackData }) => {
           <Controller
             name="ciudadOrigen"
             control={control}
-            render={({ field: { onChange } }) => (
+            render={({ field: { onChange, value } }) => (
               <Select
                 {...register('ciudadOrigen', {
                   required: 'Seleccione una ciudad de origen'
                 })}
                 onChange={onChange}
+                value={value}
                 styles={customStyles}
                 options={
                   cities &&
@@ -108,12 +108,13 @@ const OrderForm = ({ setSnackData }) => {
           <Controller
             name="ciudadDestino"
             control={control}
-            render={({ field: { onChange } }) => (
+            render={({ field: { onChange, value } }) => (
               <Select
                 {...register('ciudadDestino', {
                   required: 'Seleccione una ciudad de destino'
                 })}
                 onChange={onChange}
+                value={value}
                 styles={customStyles}
                 options={
                   cities &&
@@ -131,12 +132,13 @@ const OrderForm = ({ setSnackData }) => {
           <Controller
             name="categoria"
             control={control}
-            render={({ field: { onChange } }) => (
+            render={({ field: { onChange, value } }) => (
               <Select
                 {...register('categoria', {
                   required: 'Seleccione una categoria'
                 })}
                 onChange={onChange}
+                value={value}
                 styles={customStyles}
                 options={
                   categories &&

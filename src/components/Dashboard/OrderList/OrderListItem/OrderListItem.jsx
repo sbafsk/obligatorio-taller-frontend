@@ -18,7 +18,7 @@ const OrderListItem = ({ orderData, handleDelete }) => {
       <TableCell>{origen.nombre}</TableCell>
       <TableCell>{destino.nombre}</TableCell>
       <TableCell>{distancia}</TableCell>
-      <TableCell>${precio}</TableCell>
+      <TableCell>${precio.toFixed(2)}</TableCell>
       <TableCell>
         <IconButton
           onClick={() => handleDelete(id)}
