@@ -21,7 +21,6 @@ const OrderList = ({ orders, setSnackData }) => {
   const user = useSelector((state) => state.userLogged)
   const dispatch = useDispatch()
   const costoTotal = orders.reduce((a, b) => {
-    console.log(a, b)
     return a + b.precio
   }, 0)
   const handleDelete = async (id) => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
 import Select from 'react-select'
@@ -9,7 +9,8 @@ import {
   FormLabel,
   InputAdornment,
   Paper,
-  TextField
+  TextField,
+  Typography
 } from '@mui/material'
 
 import { onAddOrder } from '../../../store/actions'
@@ -23,6 +24,7 @@ const customStyles = {
   })
 }
 const OrderForm = ({ setSnackData }) => {
+  const [distance, setDistance] = useState()
   const { cities, categories, userLogged } = useSelector((state) => state)
   const dispatch = useDispatch()
 
@@ -30,6 +32,7 @@ const OrderForm = ({ setSnackData }) => {
     control,
     handleSubmit,
     register,
+    watch,
     formState: { errors },
     reset
   } = useForm({
@@ -41,12 +44,22 @@ const OrderForm = ({ setSnackData }) => {
     }
   })
 
+  const { ciudadOrigen, ciudadDestino } = watch()
+  useEffect(() => {
+    if (!!ciudadOrigen && !!ciudadDestino) {
+      setDistance(
+        calculateDistance(
+          cities.find((c) => c.id == ciudadOrigen.value),
+          cities.find((c) => c.id == ciudadDestino.value)
+        )
+      )
+    } else {
+      setDistance(null)
+    }
+  }, [ciudadDestino, ciudadOrigen])
+
   const onSubmit = async (data) => {
     try {
-      const distance = calculateDistance(
-        cities.find((c) => c.id === data.ciudadOrigen.value),
-        cities.find((c) => c.id === data.ciudadDestino.value)
-      )
       const price = calculateOrderTotal(distance, data.peso)
 
       const order = {
@@ -182,6 +195,10 @@ const OrderForm = ({ setSnackData }) => {
               />
             )}
           />
+
+          <Box sx={{ height: 16 }}>
+            {distance && <Typography>Distancia {distance} km</Typography>}
+          </Box>
           <Button type="submit" fullWidth variant="contained" sx={{ my: 3 }}>
             Crear
           </Button>
